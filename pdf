@@ -1,0 +1,25 @@
+#!/bin/bash
+#!bin/sh
+
+FUNC="-open -prev -cp"
+FILE=""$2".pdf"
+
+if [[ $FUNC != *"$1"* ]] ; then
+	printf "List of functions: $FUNC\n" 
+elif [[ ! -f $FILE ]] ; then
+	echo "ERROR: File does not exist!"
+elif [[ "-open" == "$1" ]] ; then
+	if [[ "$OSTYPE" == "linux-gnu" ]] ; then
+		echo "Opening in Linux Distribution"
+		gnome-open "$2".pdf
+	elif [[ "$OSTYPE" == "darwin"* ]] ; then
+		echo "Opening in Mac OSX"
+                open "$2".pdf
+	fi
+elif [[ "-prev" == "$1" ]] ; then
+	more "$2".pdf
+elif [[ "-cp" == "$1" ]] ; then
+        printf "Specify the location to copy:"
+	read LOCAL
+	cp "$2".pdf $LOCAL
+fi
