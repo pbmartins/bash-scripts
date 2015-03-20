@@ -36,6 +36,7 @@ elif [[ "-open" == "$1" ]] ; then
 	esac
 elif [[ "-prev" == "$1" ]] ; then
 	more "$FILE"
+	exit
 elif [[ "-cp" == "$1" ]] ; then
         printf "Specify the location to copy:"
 	read LOCAL
