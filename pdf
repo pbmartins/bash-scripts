@@ -2,24 +2,34 @@
 #!bin/sh
 
 FUNC="-open -prev -cp"
-FILE=""$2".pdf"
+ARGS="$#"
+echo $ARGS
 
+for i in 'seq $ARGS 2';
+do
+	FIN="${2%%.*}"
+	FILET="$FILE\ $FIN"
+done
+FILE="$FILET.pdf" 
+echo $FILE
 if [[ $FUNC != *"$1"* ]] ; then
 	printf "List of functions: $FUNC\n" 
 elif [[ ! -f $FILE ]] ; then
 	echo "ERROR: File does not exist!"
 elif [[ "-open" == "$1" ]] ; then
-	if [[ "$OSTYPE" == "linux-gnu" ]] ; then
+	case $OSTYPE in
+	linux-gnu)
 		echo "Opening in Linux Distribution"
-		gnome-open "$2".pdf
-	elif [[ "$OSTYPE" == "darwin"* ]] ; then
+		gnome-open "$FILE"
+	;;
+	darwin*)
 		echo "Opening in Mac OSX"
-                open "$2".pdf
-	fi
+                open "$FILE"
+	esac
 elif [[ "-prev" == "$1" ]] ; then
-	more "$2".pdf
+	more "$FILE"
 elif [[ "-cp" == "$1" ]] ; then
         printf "Specify the location to copy:"
 	read LOCAL
-	cp "$2".pdf $LOCAL
+	cp "$FILE" $LOCAL
 fi
