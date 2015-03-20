@@ -3,15 +3,23 @@
 
 FUNC="-open -prev -cp"
 ARGS="$#"
-echo $ARGS
 
-for i in 'seq $ARGS 2';
+for i in `seq 2 $ARGS`;
 do
-	FIN="${2%%.*}"
-	FILET="$FILE\ $FIN"
+	if [[ $i == $ARGS ]] ; then
+		echo $i
+		FIN="${2%%.*}"
+		FILET="$FIN"
+	elif [[ $i == 2 ]] ; then
+		FIN="${2%%.*}"
+                FILET="$FIN"
+	else
+		FIN="${$i}"
+                FILET="$FILET\ $FIN"
+	fi
 done
 FILE="$FILET.pdf" 
-echo $FILE
+
 if [[ $FUNC != *"$1"* ]] ; then
 	printf "List of functions: $FUNC\n" 
 elif [[ ! -f $FILE ]] ; then
