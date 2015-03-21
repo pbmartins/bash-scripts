@@ -1,0 +1,48 @@
+#!/bin/bash
+#!bin/sh
+
+ARGS="$#"
+
+for i in `seq 1 $ARGS`;
+do
+        if [[ $i == $ARGS ]] ; then
+                FIN="${1%%.*}"
+                FILET="$FIN"
+        elif [[ $i == 1 ]] ; then
+                FIN="${1%%.*}"
+                FILET="$FIN"
+        else
+                FIN="${$i}"
+                FILET="$FILET\ $FIN"
+        fi
+done
+FILE="$FILET.java"
+
+function prog {
+  # set to 1 initially
+  local return_=1
+  # set to 0 if not found
+  type $1 >/dev/null 2>&1 || { local return_=0; }
+  # return value
+  echo "$return_"
+}
+
+main() {
+        echo "Removing .class files..."
+        rm -f "*.class"
+        echo "Compiling..."
+        javac "$FILE"
+        echo "Executing java file with assertions enabled."
+        java -ea "$FILET"
+}
+
+if [[ ! -f $FILE ]] ; then
+	echo "ERROR: File does not exist!"
+	exit
+elif [[ prog ]] ; then
+	echo "Java compiler found."
+	main
+elif [[ ! prog ]] ; then
+	echo "ERROR: Java compiler not found!"
+	exit
+fi
