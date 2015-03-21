@@ -1,0 +1,43 @@
+#!/bin/bash
+#!bin/sh
+
+FUNC="-open -prev -cp"
+ARGS="$#"
+
+for i in `seq 2 $ARGS`;
+do
+	if [[ $i == $ARGS ]] ; then
+		FIN="${2%%.*}"
+		FILET="$FIN"
+	elif [[ $i == 2 ]] ; then
+		FIN="${2%%.*}"
+                FILET="$FIN"
+	else
+		FIN="${$i}"
+                FILET="$FILET\ $FIN"
+	fi
+done
+FILE="$FILET.pdf" 
+
+if [[ $FUNC != *"$1"* ]] ; then
+	printf "List of functions: $FUNC\n" 
+elif [[ ! -f $FILE ]] ; then
+	echo "ERROR: File does not exist!"
+elif [[ "-open" == "$1" ]] ; then
+	case $OSTYPE in
+	linux-gnu)
+		echo "Opening in Linux Distribution"
+		gnome-open "$FILE"
+	;;
+	darwin*)
+		echo "Opening in Mac OSX"
+                open "$FILE"
+	esac
+elif [[ "-prev" == "$1" ]] ; then
+	more "$FILE"
+	exit
+elif [[ "-cp" == "$1" ]] ; then
+        printf "Specify the location to copy:"
+	read LOCAL
+	cp "$FILE" $LOCAL
+fi
