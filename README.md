@@ -1,7 +1,7 @@
 # Shell Scripting
 Coding for UNIX -bash.
-Copy your files to ```/usr/bin``` if you're tunning Mac OSX.
-Copy them to ```/usr/username/bin``` if you're running a Linux Distribution.
+Copy your files to ```/usr/bin``` if you're running Mac OSX.
+Copy them to ```~/bin``` if you're running a Linux Distribution.
 
 ### All Purpose PDF
 ```
