@@ -14,4 +14,12 @@ Available functions are ```-open``` (open the file), ```-prev``` (preview the fi
 ```
 javim [file_name]
 ```
-Very java compiler, compile and execute your code with just a command.
+
+Improved java compiler, compile and execute your code with just a command.
+
+### ChangeDNS
+```
+changedns [interface] [option]
+```
+
+Script to quickly change the DNS servers of a Linux or OSX machine.

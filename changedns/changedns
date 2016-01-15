@@ -1,0 +1,105 @@
+#!/bin/bash
+if [[ $# == 0 ]]; then
+    # SELECT SERVICE
+    if [ $OSTYPE == darwin ]; then
+        printf "Services available:\n"
+        networksetup -listnetworkserviceorder
+        printf "Enter selection: "
+        read service
+        service=$(networksetup -listnetworkserviceorder | grep "$service" | awk -F'\\) ' '{print $2}')
+        if [ -z "$service" ]; then
+            printf "ERROR: The selected option is not valid!\n"
+            exit 1
+        fi
+    fi
+    # SELECT SERVERS
+    printf "\nSelect an option (All require super user permissions):\n"
+    printf "    1: Change to Google Public DNS\n"
+    printf "    2: Delete all configured DNS addresses\n"
+    printf "Enter selection: "
+    read response
+    printf "\n"
+    case $response in
+        '1')
+            printf "Changing $service DNS to Google Public DNS... \n"
+            case $OSTYPE in
+                linux-gnu)
+                    sudo printf "nameserver 208.67.222.222\nnameserver 208.67.220.220\nnameserver 8.8.8.8" > /etc/resolv.conf
+                ;;
+                darwin*)
+                    sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 8.8.8.8
+                esac
+            printf "Done.\n"
+            ;;
+        '2')
+            printf "Deleting all configured $service DNS addresses... \n"
+            case $OSTYPE in
+                linux-gnu)
+                    sudo printf "" > /etc/resolv.conf
+                ;;
+                darwin*)
+                    sudo networksetup -setdnsservers Wi-Fi empty
+                    sudo dscacheutil -flushcache
+                    sudo killall -HUP mDNSResponder
+                esac
+            printf "Done.\n"
+            ;;
+        *)
+            printf "ERROR: Invalid option.\n"
+    esac
+elif [[ $# == 1 ]]; then
+    if [ $OSTYPE == linux-gnu ]; then
+        case $1 in
+            '1')
+                printf "Changing $service DNS to Google Public DNS... \n"
+                sudo printf "nameserver 208.67.222.222\nnameserver 208.67.220.220\nnameserver 8.8.8.8" > /etc/resolv.conf
+                printf "Done.\n"
+                ;;
+            '2')
+                printf "Deleting all configured $service DNS addresses... \n"
+                sudo printf "" > /etc/resolv.conf
+                printf "Done.\n"
+                ;;
+            *)
+                printf "ERROR: Invalid option.\n"
+        esac
+    else
+        printf "Invalid operation for this OS.\n"
+    fi
+elif [[ $# == 2 ]]; then
+    service=$(networksetup -listnetworkserviceorder | grep "$1" | awk -F'\\) ' '{print $2}')
+    if [ -z "$service" ]; then
+        printf "ERROR: The selected option is not valid!\n"
+        exit 1
+    fi
+    case $2 in
+        '1')
+            printf "Changing $service DNS to Google Public DNS... \n"
+            case $OSTYPE in
+                linux-gnu)
+                    sudo printf "nameserver 208.67.222.222\nnameserver 208.67.220.220\nnameserver 8.8.8.8" > /etc/resolv.conf
+                ;;
+                darwin*)
+                    sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 8.8.8.8
+                esac
+            printf "Done.\n"
+            ;;
+        '2')
+            printf "Deleting all configured $service DNS addresses... \n"
+            case $OSTYPE in
+                linux-gnu)
+                    sudo printf "" > /etc/resolv.conf
+                ;;
+                darwin*)
+                    sudo networksetup -setdnsservers Wi-Fi empty
+                    sudo dscacheutil -flushcache
+                    sudo killall -HUP mDNSResponder
+                esac
+            printf "Done.\n"
+            ;;
+        *)
+            printf "ERROR: Invalid option.\n"
+    esac
+else
+    printf "ERROR: Invalid number of arguments!\n"
+fi
